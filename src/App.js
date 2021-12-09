@@ -3,7 +3,9 @@ import { Routes, Route } from "react-router-dom";
 import Nav from "./components/Nav.js";
 import PageWelcome from "./pages/PageWelcome";
 import PageRegister from "./pages/PageRegister";
+import PageAdmin from "./pages/PageAdmin.js";
 import PageLogin from "./pages/PageLogin";
+import PageLogout from "./pages/PageLogout";
 import "./App.scss";
 
 function App() {
@@ -87,7 +89,10 @@ function App() {
           <Routes>
             <Route path="/" element={<PageWelcome />} />
             <Route path="register" element={<PageRegister />} />
+            <Route path="admin" element={<PageAdmin />} />
             <Route path="login" element={<PageLogin />} />
+            <Route path="logout" element={<PageLogout />} />
+
           </Routes>
 
           {currentUserIsInGroup("loggedInUsers") && (
