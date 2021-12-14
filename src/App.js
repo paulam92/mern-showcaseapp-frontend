@@ -20,12 +20,12 @@ function App() {
         credentials: "include",
       };
       const response = await fetch(
-        "http://localhost:3003/currentuser",
+        `${process.env.REACT_APP_BACKEND_URI}/currentuser`,
         requestOptions
       );
       if (response.ok) {
-        const _currentUser = await response.json();
-        setCurrentUser((prev) => ({ ...prev, ..._currentUser }));
+        const data = await response.json();
+        setCurrentUser((prev) => ({ ...prev, ...data.user }));
       }
     })();
   }, []);
@@ -55,11 +55,14 @@ function App() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
     };
-    const response = await fetch("http://localhost:3003/login", requestOptions);
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_URI}/login`,
+      requestOptions
+    );
     if (response.ok) {
-      const _currentUser = await response.json();
-      console.log(_currentUser);
-      setCurrentUser((prev) => ({ ...prev, ..._currentUser }));
+      const data = await response.json();
+      console.log(data);
+      setCurrentUser((prev) => ({ ...prev, ...data.user }));
       setUsername("");
       setPassword("");
     }
@@ -71,17 +74,18 @@ function App() {
       credentials: "include",
     };
     const response = await fetch(
-      "http://localhost:3003/logout",
+      `${process.env.REACT_APP_BACKEND_URI}/logout`,
       requestOptions
     );
     if (response.ok) {
-      const _currentUser = await response.json();
-      setCurrentUser((prev) => ({ ...prev, ..._currentUser }));
+      const data = await response.json();
+      setCurrentUser((prev) => ({ ...prev, ...data.user }));
     }
   };
 
   return (
     <div className="App">
+      {currentUser.username}
       {currentUser.username && (
         <>
           <h1>MERN Showcase App</h1>
@@ -92,7 +96,6 @@ function App() {
             <Route path="admin" element={<PageAdmin />} />
             <Route path="login" element={<PageLogin />} />
             <Route path="logout" element={<PageLogout />} />
-
           </Routes>
 
           {currentUserIsInGroup("loggedInUsers") && (
