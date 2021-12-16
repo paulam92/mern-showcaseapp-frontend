@@ -10,13 +10,14 @@ body {
 			padding: 10px;
 			ul {
 				display: flex;
-				// margin: 0;
+				margin: 0;
 				li {
 					list-style: none;
 					margin: 0 10px 0 0;
-					a {
+					a, span.commandLink {
 						color: #ccc;
 						text-decoration: none;
+						cursor: pointer;
 					}
 					.active {
 						color: rgb(255, 255, 161);
@@ -146,6 +147,40 @@ body {
 		}
 		.content {
 			padding: 20px 0 0 0;
+		}
+		.spinnerGroup {
+			color: #777;
+			.spinner {
+				animation: spin infinite 2s linear;
+			}
+			.spinnerText {
+				font-size: 2.4rem;
+			}
+
+			@keyframes spin {
+				from {
+					transform: rotate(0deg);
+				}
+				to {
+					transform: rotate(360deg);
+				}
+			}
+		}
+		.appMessage {
+			margin: 5px 0 0 0;
+			padding: 10px;
+			border-radius: 5px;
+			text-align: center;
+			cursor: pointer;
+		}
+		.appMessageError {
+			background-color: tomato;
+		}
+		.appMessageWarning {
+			background-color: yellow;
+		}
+		.appMessageSuccess {
+			background-color: lightgreen;
 		}
 	}
 }

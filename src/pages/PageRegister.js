@@ -1,10 +1,14 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import AppContext from '../AppContext';
 import { useNavigate } from 'react-router-dom';
 
 const PageRegister = () => {
-	const { setCurrentUser, currentUserIsInGroup } = useContext(AppContext);
+	const { setCurrentUser, currentUserIsInGroup, initializePage } = useContext(AppContext);
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		initializePage();
+	}, []);
 
 	const [signupFormField_login, setSignupFormField_login] = useState('');
 	const [signupFormField_password1, setSignupFormField_password1] = useState('');
@@ -15,8 +19,8 @@ const PageRegister = () => {
 
 	// SIGNUP FORM FIELD HANDLERS
 	const handle_signupFormField_login = (e) => {
-		let login = e.target.value;
-		setSignupFormField_login(login);
+		let username = e.target.value;
+		setSignupFormField_login(username);
 	}
 	const handle_signupFormField_password1 = (e) => {
 		let password1 = e.target.value;
@@ -77,8 +81,9 @@ const PageRegister = () => {
 					<form>
 						<fieldset>
 							<div className="row">
-								<label htmlFor="signupFormField_login">Login</label>
-								<input type="text" id="signupFormField_login" value={signupFormField_login} onChange={handle_signupFormField_login} />
+								<label htmlFor="signupFormField_login" >Login</label>
+								<input type="text" autoFocus id="signupFormField_login" value={signupFormField_login} onChange={handle_signupFormField_login} />
+
 							</div>
 							<div className="row">
 								<label htmlFor="signupFormField_password1">Password 1</label>

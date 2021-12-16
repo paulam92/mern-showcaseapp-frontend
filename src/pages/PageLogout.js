@@ -1,17 +1,21 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import AppContext from '../AppContext';
 import { useNavigate } from 'react-router-dom';
 
 const PageLogout = () => {
-	const { setCurrentUser, currentUserIsInGroup } = useContext(AppContext);
+	const { setCurrentUser, currentUserIsInGroup, initializePage } = useContext(AppContext);
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		initializePage();
+	}, []);
 
 	const handle_logoutForm_logoutButton = async (e) => {
 		const requestOptions = {
 			method: 'GET',
 			credentials: 'include'
 		};
-		const response = await fetch('http://localhost:3003/logout', requestOptions);
+		const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/logout`, requestOptions);
 		if (response.ok) {
 			const _currentUser = await response.json();
 			setCurrentUser(prev => ({ ...prev, ..._currentUser }));

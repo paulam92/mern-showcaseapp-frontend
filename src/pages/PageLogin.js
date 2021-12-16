@@ -1,18 +1,22 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import AppContext from '../AppContext';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const PageLogin = () => {
-	const { setCurrentUser, currentUserIsInGroup } = useContext(AppContext);
+	const { setCurrentUser, currentUserIsInGroup, setAppMessage, initializePage } = useContext(AppContext);
 	const [loginFormField_login, setLoginFormField_login] = useState('');
 	const [loginFormField_password, setLoginFormField_password] = useState('');
 	const navigate = useNavigate();
 
+	useEffect(() => {
+		initializePage();
+	}, []);
+
 	// LOGIN FORM FIELD HANDLERS
 	const handle_loginFormField_login = (e) => {
-		let login = e.target.value;
-		setLoginFormField_login(login);
+		let username = e.target.value;
+		setLoginFormField_login(username);
 	}
 	const handle_loginFormField_password = (e) => {
 		let password = e.target.value;
@@ -24,17 +28,20 @@ const PageLogin = () => {
 			method: 'POST',
 			credentials: "include",
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ login: loginFormField_login, password: loginFormField_password }),
+			body: JSON.stringify({ username: loginFormField_login, password: loginFormField_password }),
 		};
 		const url = `${process.env.REACT_APP_BACKEND_URL}/login`;
-		console.log('back url', url);
 		const response = await fetch(url, requestOptions);
+		const _currentUser = await response.json();
+		setCurrentUser(prev => ({ ...prev, ..._currentUser }));
 		if (response.ok) {
-			const _currentUser = await response.json();
-			setCurrentUser(prev => ({ ...prev, ..._currentUser }));
 			setLoginFormField_login('');
 			setLoginFormField_password('');
 			navigate('/');
+		} else {
+			const _appMessage = { kind: 'appMessageError', message: 'Bad login, please try again.' };
+			setLoginFormField_password('');
+			setAppMessage(prev => ({ ...prev, ..._appMessage }));
 		}
 	}
 	const handle_logoutForm_logoutButton = async (e) => {
@@ -59,7 +66,7 @@ const PageLogin = () => {
 					<fieldset>
 						<div className="row">
 							<label htmlFor="loginFormField_login">Login</label>
-							<input type="text" id="loginFormField_login" value={loginFormField_login} onChange={handle_loginFormField_login} />
+							<input autoFocus type="text" id="loginFormField_login" value={loginFormField_login} onChange={handle_loginFormField_login} />
 						</div>
 						<div className="row">
 							<label htmlFor="loginFormField_password">Password</label>
